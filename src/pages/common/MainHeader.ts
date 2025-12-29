@@ -2,20 +2,24 @@ import type { Locator, Page } from '@playwright/test';
 
 export class MainHeader {
   private readonly page: Page;
-  readonly userMenuTrigger: Locator;
+  readonly desktopUserMenuTrigger: Locator;
+  readonly mobileUserMenuTrigger: Locator;
   readonly logoutLink: Locator;
   readonly loginDropdownTrigger: Locator;
   readonly loginHudlItem: Locator;
   
   constructor(page: Page) {
     this.page = page;
-
-    this.userMenuTrigger = page.locator('div.hui-globaluseritem')
-    this.logoutLink = page.getByRole('link', { name: 'Log Out' });
     
+    this.desktopUserMenuTrigger = page.locator('div.hui-globaluseritem');
+    // Support both possible mobile classes if needed
+    this.mobileUserMenuTrigger = page.locator(
+      '.hui-secondarynav__menu-icon'
+    );
+    
+    this.logoutLink = page.getByRole('link', { name: 'Log Out' });
     this.loginDropdownTrigger = page.locator('[data-qa-id="login-select"]');
     this.loginHudlItem = page.locator('[data-qa-id="login-hudl"]');
-    
   }
   
   async openLogin() {
@@ -24,7 +28,22 @@ export class MainHeader {
   }
   
   async openUserMenu() {
-    await this.userMenuTrigger.click();
+    if (await this.mobileUserMenuTrigger.first().isEnabled()) {
+      await this.mobileUserMenuTrigger.first().click();
+      return;
+    }
+
+    const desktopTrigger = this.desktopUserMenuTrigger.first();
+    if (await desktopTrigger.isEnabled()) {
+      await desktopTrigger.click();
+      return;
+    }
+    
+    const desktopTrigger2 = this.desktopUserMenuTrigger.last();
+    if (await desktopTrigger2.isVisible()) {
+      await desktopTrigger2.click();
+      return;
+    }
   }
   
   async logout() {

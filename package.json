@@ -8,6 +8,7 @@
     "test:ui": "playwright test --ui",
     "test:debug": "PWDEBUG=1 playwright test",
     "test:auth": "playwright test tests/auth",
+    "test:mobile": "playwright test --project='Mobile Chrome'",
     "lint": "eslint . --ext .ts",
     "format": "prettier . --write"
   },
