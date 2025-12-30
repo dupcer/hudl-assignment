@@ -2,5 +2,10 @@ node_modules
 test-results
 playwright-report
 reports
-.env.test
+.env
+.env.*
 .idea
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
